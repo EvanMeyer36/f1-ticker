@@ -42,7 +42,7 @@ To protect your Raspberry Pi and make the setup more durable, you can use a cust
 
 This case will help keep your components organized and safe, especially if you plan to move or transport your project.
 ## Wiring Diagram
-![Wiring Diagram](wiring_diagram.png)
+![Wiring Diagram](pi_chart.png)
 ## Code Explanation
 
 1.  **APIs Used**:
