@@ -19,7 +19,7 @@ GPIO.setup(BUTTON_REFRESH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(BUTTON_TOGGLE, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # State variables
-feeds = ["news", "race_results", "standings"]
+feeds = ["driver_standings", "constructor_standings", "race_results", "news"]
 current_feed_index = 0
 toggle_feature_state = False
 
@@ -50,20 +50,20 @@ def get_race_results(data):
     return results
 
 # Fetch championship standings (drivers)
-def fetch_standings_data():
+def fetch_driver_standings_data():
     url = "http://ergast.com/api/f1/current/driverStandings.json"
     try:
         response = requests.get(url)
         if response.status_code == 200:
             return response.json()
         else:
-            print("Error fetching standings data")
+            print("Error fetching driver standings data")
             return None
     except Exception as e:
         print("Error:", e)
         return None
 
-def get_standings(data):
+def get_driver_standings(data):
     standings = []
     if data:
         driver_standings = data['MRData']['StandingsTable']['StandingsLists'][0]['DriverStandings']
@@ -73,6 +73,32 @@ def get_standings(data):
             driver = standing['Driver']['familyName']
             points = standing['points']
             standings.append(f"{position}: {driver} {points}pts")
+    return standings
+
+# Fetch championship standings (constructors)
+def fetch_constructor_standings_data():
+    url = "http://ergast.com/api/f1/current/constructorStandings.json"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print("Error fetching constructor standings data")
+            return None
+    except Exception as e:
+        print("Error:", e)
+        return None
+
+def get_constructor_standings(data):
+    standings = []
+    if data:
+        constructor_standings = data['MRData']['StandingsTable']['StandingsLists'][0]['ConstructorStandings']
+        standings.append("Constructor Standings")
+        for standing in constructor_standings:
+            position = standing['position']
+            constructor = standing['Constructor']['name']
+            points = standing['points']
+            standings.append(f"{position}: {constructor} {points}pts")
     return standings
 
 # Fetch news from GPBlog
@@ -87,14 +113,20 @@ def display_feed():
     global current_feed_index
     lcd.clear()
     
-    if feeds[current_feed_index] == "news":
-        items = fetch_news()
+    if feeds[current_feed_index] == "driver_standings":
+        standings_data = fetch_driver_standings_data()
+        items = get_driver_standings(standings_data)
+    elif feeds[current_feed_index] == "constructor_standings":
+        standings_data = fetch_constructor_standings_data()
+        items = get_constructor_standings(standings_data)
     elif feeds[current_feed_index] == "race_results":
         race_data = fetch_race_data()
         items = get_race_results(race_data)
-    elif feeds[current_feed_index] == "standings":
-        standings_data = fetch_standings_data()
-        items = get_standings(standings_data)
+        # If race results are unavailable, default to news headlines
+        if not items or len(items) <= 1:
+            items = fetch_news()
+    elif feeds[current_feed_index] == "news":
+        items = fetch_news()
     else:
         items = ["No data"]
 
