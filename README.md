@@ -17,8 +17,8 @@ This project is an F1 news and race results ticker built using a Raspberry Pi an
 -   **16x2 I2C LCD Display Module**
 -   **Three push buttons**
 -   **Jumper wires and a breadboard**
-## Wiring Diagram
-![Wiring Diagram](pi_chart.png)
+
+
 ## Setup and Installation
 
 1.  **Connect the Hardware**:
@@ -34,7 +34,15 @@ This project is an F1 news and race results ticker built using a Raspberry Pi an
     
     `python3 f1_ticker.py` 
     
+## 3D-Printed Case for the Project
 
+To protect your Raspberry Pi and make the setup more durable, you can use a custom 3D-printed case designed for projects like this one. You can find a suitable design on Thingiverse:
+
+-   **3D-Printed Case**: Check out this 3D-printed case for the Raspberry Pi and LCD setup: [Thingiverse - Raspberry Pi LCD Case](https://www.thingiverse.com/thing:4140909#google_vignette).
+
+This case will help keep your components organized and safe, especially if you plan to move or transport your project.
+## Wiring Diagram
+![Wiring Diagram](wiring_diagram.png)
 ## Code Explanation
 
 1.  **APIs Used**:
